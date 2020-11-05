@@ -1,5 +1,5 @@
 package com.izzyacademy.product.analysis.jobs
 
-class JobServiceBase {
+class JobServiceBase () {
 
 }
