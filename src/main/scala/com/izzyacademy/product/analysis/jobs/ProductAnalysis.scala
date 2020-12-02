@@ -13,13 +13,15 @@ class ProductAnalysis() extends JobService {
 
     //val mongoDBURI = "mongodb://admin@mongo-internal.mongo.svc.cluster.local:27017/admin"
 
-    val mongoDBURI = "mongodb://admin:mong044120@52.241.138.173:27017/admin"
+    val mongoDBURIDefault = "mongodb://admin:mong044120@mongo-external.mongo.svc.cluster.local:27017/admin"
     val databaseName = "ecommerce"
 
     val sparkConfig = new SparkConf()
       .setMaster("local[*]")
       .set("spark.driver.memory", "4g")
       .setAppName(this.getClass().getName())
+
+    val mongoDBURI = sparkConfig.get("mongo.connection", mongoDBURIDefault)
 
     // https://docs.mongodb.com/spark-connector/master/configuration#std-label-spark-input-conf
     // https://docs.mongodb.com/spark-connector/master/configuration#std-label-spark-output-conf
@@ -28,6 +30,7 @@ class ProductAnalysis() extends JobService {
       .config("spark.mongodb.input.uri", mongoDBURI)
       .config("spark.mongodb.output.uri", mongoDBURI)
       .getOrCreate()
+
 
     // This is necessary so as to find encoders for types stored in a Datasets.
     // Primitive types (Int, String, etc) and Product types (case classes) are supported by importing currentSparkSession.implicits._
